@@ -15,6 +15,10 @@ SELF := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 default: help
 
 all: \
+	ROOT1-duplicates \
+	ROOT2-duplicates \
+	ROOT1-minimal \
+	ROOT2-minimal \
 	ROOT1-wasteful \
 	ROOT2-wasteful \
 	ROOT1-ROOT2-combined \
