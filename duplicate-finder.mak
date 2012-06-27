@@ -130,14 +130,16 @@ testenv:
 # duplicate1-in-test1
 # common-in-test1-and-test2
 %-minimal: %-hash-sorted
-	sort --merge --unique --key=1,1 $< > $@
+	sort --merge --unique --key=1,1 $< | \
+		sort --key=2,2 > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
 # Wasteful (files with duplicates within a tree), shows only one of the two
 # would be safe to delete from this list
 # duplicate1-in-test1
 %-wasteful: %-hash-sorted
-	uniq --check-chars=$(HASHWIDTH) -d $< > $@
+	uniq --check-chars=$(HASHWIDTH) -d $< | \
+		sort --key=2,2 > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
 # Combined
