@@ -1,4 +1,5 @@
 #!/usr/bin/make -f
+SHELL=/bin/bash
 
 ROOT1 ?= /tmp
 ROOT2 ?= /tmp
