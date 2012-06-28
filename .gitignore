@@ -1,8 +1,12 @@
 test1
 test2
+ROOT1-hash
+ROOT1-hash-sorted
 ROOT1-duplicates
 ROOT1-minimal
 ROOT1-wasteful
+ROOT2-hash
+ROOT2-hash-sorted
 ROOT2-duplicates
 ROOT2-minimal
 ROOT2-wasteful
