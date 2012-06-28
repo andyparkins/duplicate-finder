@@ -24,6 +24,7 @@ all: \
 	ROOT1-ROOT2-combined \
 	ROOT1-ROOT2-duplicates \
 	ROOT1-ROOT2-duplicates-inclusive \
+	ROOT1-ROOT2-diff \
 	ROOT1-ROOT2-broken
 
 help:
@@ -50,6 +51,7 @@ help:
 	@echo "                         ROOT2, inclusive of in-tree duplicates"
 	@echo " ROOT1-ROOT2-minimal     Minimal set to get one copy of everything"
 	@echo "                         in ROOT1 and ROOT2"
+	@echo " ROOT1-ROOT2-diff        The differences between ROOT1 and ROOT2"
 	@echo " ROOT1-ROOT2-broken      Files with the same path in ROOT1 and ROOT2,"
 	@echo "                         but different content"
 	@echo ""
@@ -65,6 +67,7 @@ test: testenv
 		ROOT1-ROOT2-duplicates \
 		ROOT1-ROOT2-duplicates-inclusive \
 		ROOT1-ROOT2-minimal \
+		ROOT1-ROOT2-diff \
 		ROOT1-ROOT2-broken
 	@echo "-----------"
 #	# I include these tests in the knowledge that they don't succeed.  The
@@ -90,6 +93,7 @@ test: testenv
 	cat < ROOT1-ROOT2-duplicates
 	cat < ROOT1-ROOT2-duplicates-inclusive
 	cat < ROOT1-ROOT2-minimal
+	cat < ROOT1-ROOT2-diff
 	cat < ROOT1-ROOT2-broken
 
 #  $ tree
@@ -121,7 +125,7 @@ testenv:
 # Master hash list, in directory depth order
 %-hash:
 	@echo "--- hashing $($*)"
-	-cd "$($*)"; find . -type f -readable -exec $(HASHER) {} \; > "$(TOP)/$@"
+	-cd "$($*)"; find . -type f -readable -exec $(HASHER) {} \; | sort --key=2,2 > "$(TOP)/$@"
 	@printf " - %d hashes created for %s\n" $$(wc -l $@)
 
 # Hash list sorted by hash.  Duplicates will be next to each other
@@ -199,6 +203,10 @@ ROOT1-ROOT2-minimal: ROOT1-ROOT2-combined
 	sort --key=2,2 --merge --unique $< > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
+# --- Diff
+ROOT1-ROOT2-diff: ROOT1-hash ROOT2-hash
+	-diff -u $^ > $@
+
 # --- Broken (same path, different hashes)
 ROOT1-ROOT2-broken: ROOT1-ROOT2-combined
 	sort --key=3,3 $< | \
@@ -209,8 +217,8 @@ ROOT1-ROOT2-broken: ROOT1-ROOT2-combined
 
 clean:
 	-rm -f ROOT{1,2}-{unique,duplicates,minimal,wasteful}
-	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,broken}
+	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,diff,broken}
 
 distclean:
 	-rm -f ROOT{1,2}-{hash,hash-sorted,unique,duplicates,minimal,wasteful}
-	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,broken}
+	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,diff,broken}
