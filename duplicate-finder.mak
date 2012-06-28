@@ -75,10 +75,11 @@ test: testenv
 		|| echo "WARNING: ROOT2-wasteful + ROOT2-minimal != ROOT2-hash-sorted"
 	@echo "-----------"
 	cat < ROOT1-duplicates
-	cat < ROOT2-duplicates
 	cat < ROOT1-minimal
-	cat < ROOT2-minimal
 	cat < ROOT1-wasteful
+	@echo ""
+	cat < ROOT2-duplicates
+	cat < ROOT2-minimal
 	cat < ROOT2-wasteful
 	@echo ""
 	cat < ROOT1-ROOT2-duplicates
