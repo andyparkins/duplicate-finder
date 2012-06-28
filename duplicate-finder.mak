@@ -164,7 +164,7 @@ testenv:
 # ROOT2: duplicate1-in-test2
 # ROOT2: common-in-test1-and-test2
 ROOT1-ROOT2-combined: ROOT1-minimal ROOT2-minimal
-	grep -H "" $^ | sed 's/^\([^:]\+\)-minimal:/\1 /' \
+	grep -H "" $^ | sed 's/^\([^:]\+\)-minimal:/\1 /' | \
 		sort --key=2,3 > $@
 
 # --- Duplicates (across trees, excluding in-tree duplicates)
