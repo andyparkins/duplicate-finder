@@ -23,6 +23,7 @@ all: \
 	ROOT2-wasteful \
 	ROOT1-ROOT2-combined \
 	ROOT1-ROOT2-duplicates \
+	ROOT1-ROOT2-duplicates-inclusive \
 	ROOT1-ROOT2-broken
 
 help:
@@ -59,6 +60,7 @@ test: testenv
 		ROOT1-minimal ROOT2-minimal \
 		ROOT1-wasteful ROOT2-wasteful \
 		ROOT1-ROOT2-duplicates \
+		ROOT1-ROOT2-duplicates-inclusive \
 		ROOT1-ROOT2-minimal \
 		ROOT1-ROOT2-broken
 	@echo "-----------"
@@ -83,6 +85,7 @@ test: testenv
 	cat < ROOT2-wasteful
 	@echo ""
 	cat < ROOT1-ROOT2-duplicates
+	cat < ROOT1-ROOT2-duplicates-inclusive
 	cat < ROOT1-ROOT2-minimal
 	cat < ROOT1-ROOT2-broken
 
@@ -174,6 +177,15 @@ ROOT1-ROOT2-duplicates: ROOT1-ROOT2-combined
 	uniq --skip-fields=1 --check-chars=$(HASHWIDTH) -D $< > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
+# --- Duplicates (across trees, including in-tree duplicates)
+# ROOT1: common-in-test1-and-test2
+# ROOT2: common-in-test1-and-test2
+ROOT1-ROOT2-duplicates-inclusive: ROOT1-hash-sorted ROOT2-hash-sorted
+	grep -H "" $^ | sed 's/^\([^:]\+\)-hash-sorted:/\1 /' | \
+		sort --key=2,3 | \
+		uniq --skip-fields=1 --check-chars=$(HASHWIDTH) -D > $@
+	@printf " - %d hashes in %s\n" $$(wc -l $@)
+
 # --- Minimal (across trees, excluding in-tree duplicates)
 # ROOT1: duplicate1-in-test1
 # ROOT1: unique-in-test1
@@ -194,8 +206,8 @@ ROOT1-ROOT2-broken: ROOT1-ROOT2-combined
 
 clean:
 	-rm -f ROOT{1,2}-{unique,duplicates,minimal,wasteful}
-	-rm -f ROOT1-ROOT2-{combined,duplicates,minimal,broken}
+	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,broken}
 
 distclean:
 	-rm -f ROOT{1,2}-{hash,hash-sorted,unique,duplicates,minimal,wasteful}
-	-rm -f ROOT1-ROOT2-{combined,duplicates,minimal,broken}
+	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,broken}
