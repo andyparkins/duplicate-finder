@@ -164,14 +164,14 @@ testenv:
 # ROOT2: duplicate1-in-test2
 # ROOT2: common-in-test1-and-test2
 ROOT1-ROOT2-combined: ROOT1-minimal ROOT2-minimal
-	grep -H "" $^ | sed 's/^\([^:]\+\)-minimal:/\1 /' > $@
+	grep -H "" $^ | sed 's/^\([^:]\+\)-minimal:/\1 /' \
+		sort --key=2,3 > $@
 
 # --- Duplicates (across trees, excluding in-tree duplicates)
 # ROOT1: common-in-test1-and-test2
 # ROOT2: common-in-test1-and-test2
 ROOT1-ROOT2-duplicates: ROOT1-ROOT2-combined
-	sort --key=2,2 $< | \
-		uniq --skip-fields=1 --check-chars=$(HASHWIDTH) -D > $@
+	uniq --skip-fields=1 --check-chars=$(HASHWIDTH) -D $< > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
 # --- Minimal (across trees, excluding in-tree duplicates)
@@ -181,7 +181,7 @@ ROOT1-ROOT2-duplicates: ROOT1-ROOT2-combined
 # ROOT2: duplicate1-in-test2
 # ROOT1,2: common-in-test1-and-test2
 ROOT1-ROOT2-minimal: ROOT1-ROOT2-combined
-	sort --key=2,2 --unique $< > $@
+	sort --key=2,2 --merge --unique $< > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
 # --- Broken (same path, different hashes)
