@@ -54,12 +54,25 @@ help:
 # Here is a way of testing this script:
 test: testenv
 	$(MAKE) -f $(SELF) ROOT1=test1 ROOT2=test2 \
+		ROOT1-hash-sorted ROOT2-hash-sorted \
 		ROOT1-duplicates ROOT2-duplicates \
 		ROOT1-minimal ROOT2-minimal \
 		ROOT1-wasteful ROOT2-wasteful \
 		ROOT1-ROOT2-duplicates \
 		ROOT1-ROOT2-minimal \
 		ROOT1-ROOT2-broken
+	@echo "-----------"
+#	# I include these tests in the knowledge that they don't succeed.  The
+#   # problem is that "sort --unique" and "uniq -d" aren't outputting
+#   # complimentary sets.  "sort --unique" outputs the first in an equal run
+#   # but "uniq -d" _doesn't_ necessarily _not_ output the first in an equal
+#   # run; it can chose to drop any of the equal run.
+	@[ $$(sort ROOT1-wasteful ROOT1-minimal | md5sum | cut -f 1 -d " ") \
+		= $$(md5sum ROOT1-hash-sorted | cut -f 1 -d " ") ] \
+		|| echo "WARNING: ROOT1-wasteful + ROOT1-minimal != ROOT1-hash-sorted"
+	@[ $$(sort ROOT2-wasteful ROOT2-minimal | md5sum | cut -f 1 -d " ") \
+		= $$(md5sum ROOT2-hash-sorted | cut -f 1 -d " ") ] \
+		|| echo "WARNING: ROOT2-wasteful + ROOT2-minimal != ROOT2-hash-sorted"
 	@echo "-----------"
 	cat < ROOT1-duplicates
 	cat < ROOT2-duplicates
