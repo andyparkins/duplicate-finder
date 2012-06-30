@@ -25,7 +25,8 @@ all: \
 	ROOT1-ROOT2-duplicates \
 	ROOT1-ROOT2-duplicates-inclusive \
 	ROOT1-ROOT2-diff \
-	ROOT1-ROOT2-broken
+	ROOT1-ROOT2-broken \
+	ROOT1-ROOT2-describe.txt
 
 help:
 	@echo "Usage:"
@@ -68,7 +69,8 @@ test: testenv
 		ROOT1-ROOT2-duplicates-inclusive \
 		ROOT1-ROOT2-minimal \
 		ROOT1-ROOT2-diff \
-		ROOT1-ROOT2-broken
+		ROOT1-ROOT2-broken \
+		ROOT1-ROOT2-describe.txt
 	@echo "-----------"
 #	# I include these tests in the knowledge that they don't succeed.  The
 #   # problem is that "sort --unique" and "uniq -d" aren't outputting
@@ -121,6 +123,10 @@ testenv:
 	echo "different-in-test1-and-test2" > test1/different-in-test1-and-test2
 	echo "different-in-test2-and-test1" > test2/different-in-test1-and-test2
 
+
+ROOT1-ROOT2-describe.txt:
+	echo "$(ROOT1)" > $@
+	echo "$(ROOT2)" >> $@
 
 # Master hash list, in directory depth order
 %-hash:
