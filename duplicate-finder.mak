@@ -12,6 +12,37 @@ TOP := $(shell pwd)
 SELF := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 
 
+# --------------------
+
+# Split on :
+PART1_1 := $(word 1,$(subst :, ,$(ROOT1)))
+PART1_2 := $(word 2,$(subst :, ,$(ROOT1)))
+PART2_1 := $(word 1,$(subst :, ,$(ROOT2)))
+PART2_2 := $(word 2,$(subst :, ,$(ROOT2)))
+
+# Create remote-run part
+ifeq ($(PART1_2),)
+	# if PARTx_2 is not set, then PARTx_1 is the ROOT, and there is no host
+	HOST1 := sh
+	DIR1 := $(PART1_1)
+else
+	# if PARTx_2 is set, then it is the new ROOTx
+	HOST1 := ssh $(PART1_1)
+	DIR1 := $(PART1_2)
+endif
+
+ifeq ($(PART2_2),)
+	# if PARTx_2 is not set, then PARTx_1 is the ROOT, and there is no host
+	HOST2 := sh -c
+	DIR2 := $(PART2_1)
+else
+	# if PARTx_2 is set, then it is the new ROOTx
+	HOST2 := ssh $(PART2_1)
+	DIR2 := $(PART2_2)
+endif
+
+
+
 default: help
 
 all: \
@@ -125,13 +156,16 @@ testenv:
 
 
 ROOT1-ROOT2-describe.txt:
-	echo "$(ROOT1)" > $@
-	echo "$(ROOT2)" >> $@
+	echo "$(DIR1)" > $@
+	echo "$(DIR2)" >> $@
 
 # Master hash list, in directory depth order
-%-hash:
-	@echo "--- hashing $($*)"
-	-cd "$($*)"; find . -type f -readable -exec $(HASHER) {} \; | sort --key=2,2 > "$(TOP)/$@"
+ROOT%-hash:
+	@echo "--- hashing $(ROOT$*)"
+	-$(HOST$*) \
+		"cd \"$(DIR$*)\" ; \
+		find . -type f -readable -exec $(HASHER) {} \\;" | \
+		sort --key=2,2 > "$(TOP)/$@"
 	@printf " - %d hashes created for %s\n" $$(wc -l $@)
 
 # Hash list sorted by hash.  Duplicates will be next to each other
