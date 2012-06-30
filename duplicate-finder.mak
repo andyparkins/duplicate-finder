@@ -88,6 +88,20 @@ help:
 	@echo "                         but different content"
 	@echo ""
 
+info:
+	@echo "TOP     := $(TOP)"
+	@echo "SELF    := $(SELF)"
+	@echo ""
+	@echo "PART1_1 := $(PART1_1)"
+	@echo "PART1_2 := $(PART1_2)"
+	@echo "HOST1   := $(HOST1)"
+	@echo "DIR1    := $(DIR1)"
+	@echo ""
+	@echo "PART2_1 := $(PART2_1)"
+	@echo "PART2_2 := $(PART2_2)"
+	@echo "HOST2   := $(HOST2)"
+	@echo "DIR2    := $(DIR2)"
+
 
 # Here is a way of testing this script:
 test: testenv
