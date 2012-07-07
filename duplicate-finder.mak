@@ -255,7 +255,9 @@ ROOT1-ROOT2-duplicates-inclusive: ROOT1-hash-sorted ROOT2-hash-sorted
 # ROOT2: duplicate1-in-test2
 # ROOT1,2: common-in-test1-and-test2
 ROOT1-ROOT2-minimal: ROOT1-ROOT2-combined
-	sort --key=2,2 --merge --unique $< > $@
+	awk '{print $$2, $$1, $$3}' $< | \
+		sort | awk '{print $$2, $$1, $$3}' | \
+		sort --key=2,2 --merge --unique > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
 # --- Diff
