@@ -53,6 +53,7 @@ all: \
 	ROOT1-wasteful \
 	ROOT2-wasteful \
 	ROOT1-ROOT2-combined \
+	ROOT1-ROOT2-minimal \
 	ROOT1-ROOT2-duplicates \
 	ROOT1-ROOT2-duplicates-inclusive \
 	ROOT1-ROOT2-diff \
