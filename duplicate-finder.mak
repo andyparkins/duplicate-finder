@@ -23,7 +23,7 @@ PART2_2 := $(word 2,$(subst :, ,$(ROOT2)))
 # Create remote-run part
 ifeq ($(PART1_2),)
 	# if PARTx_2 is not set, then PARTx_1 is the ROOT, and there is no host
-	HOST1 := sh
+	HOST1 := sh -c
 	DIR1 := $(PART1_1)
 else
 	# if PARTx_2 is set, then it is the new ROOTx
