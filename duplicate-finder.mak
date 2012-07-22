@@ -275,7 +275,7 @@ ROOT1-ROOT2-broken: ROOT1-ROOT2-combined
 clean:
 	-rm -f ROOT{1,2}-{unique,duplicates,minimal,wasteful}
 	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,diff,broken}
+	-rm -f ROOT1-ROOT2-describe.txt
 
-distclean:
-	-rm -f ROOT{1,2}-{hash,hash-sorted,unique,duplicates,minimal,wasteful}
-	-rm -f ROOT1-ROOT2-{combined,duplicates,duplicates-inclusive,minimal,diff,broken}
+distclean: clean
+	-rm -f ROOT{1,2}-{hash,hash-sorted}
