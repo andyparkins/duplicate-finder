@@ -287,3 +287,5 @@ clean:
 
 distclean: clean
 	-rm -f ROOT{1,2}-{hash,hash-sorted}
+
+.PHONY: default all help info test testenv brokenls clean distclean
