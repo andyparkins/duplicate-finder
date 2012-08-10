@@ -271,6 +271,14 @@ ROOT1-ROOT2-broken: ROOT1-ROOT2-combined
 		uniq --skip-fields=1 --check-chars=$(HASHWIDTH) -u > $@
 	@printf " - %d hashes in %s\n" $$(wc -l $@)
 
+# ---------- Tools
+brokenls: ROOT1-ROOT2-broken ROOT1-ROOT2-describe.txt
+	@export ROOT1="$$(head -1 ROOT1-ROOT2-describe.txt)"; \
+	export ROOT2="$$(tail -1 ROOT1-ROOT2-describe.txt)"; \
+	cut -d " " -f1,4- ROOT1-ROOT2-broken \
+		| sed -e "s|^ROOT1 \.|$${ROOT1}|" -e "s|^ROOT2 \.|$${ROOT2}|" \
+		| while IFS= read path; do ls -l --time-style=long-iso "$$path"; done
+
 
 clean:
 	-rm -f ROOT{1,2}-{unique,duplicates,minimal,wasteful}
