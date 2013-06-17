@@ -1,0 +1,27 @@
+Usage:
+  duplicate-finder <mode> ROOT1=<root1_path> ROOT2=<root2_path>
+
+Modes:
+ info                    This page
+ all                     ROOTx-wasteful ROOT1-ROOT2-*
+ test                    Make test1 and test2 directories, populate
+                         and run duplicate-finder on them
+ clean                   Remove all output files
+
+Outputs:
+ ROOTx-duplicates        Files that are the same within ROOTx
+ ROOTx-minimal           Minimal set to get one copy of everything
+                         in ROOTx
+ ROOTx-wasteful          Files to remove from ROOTx to leave
+                         ROOTx-minimal only
+ ROOT1-ROOT2-duplicates  Files that are duplicated across ROOT1 and
+                         ROOT2, exclusive of in-tree duplicates
+ ROOT1-ROOT2-duplicates-inclusive
+                         Files that are duplicated across ROOT1 and
+                         ROOT2, inclusive of in-tree duplicates
+ ROOT1-ROOT2-minimal     Minimal set to get one copy of everything
+                         in ROOT1 and ROOT2
+ ROOT1-ROOT2-diff        The differences between ROOT1 and ROOT2
+ ROOT1-ROOT2-broken      Files with the same path in ROOT1 and ROOT2,
+                         but different content
+
